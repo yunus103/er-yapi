@@ -3,7 +3,7 @@ import { SanityImage } from "@/components/ui/SanityImage";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SanityImage as SanityImageType, CtaLink } from "@/types";
-import { RiStore2Line, RiMapPinLine } from "react-icons/ri";
+import { RiStore2Line, RiPhoneLine } from "react-icons/ri";
 
 interface HeroSectionProps {
   data: {
@@ -38,7 +38,10 @@ export function HeroSection({ data }: HeroSectionProps) {
   const hasImage = Boolean(data?.heroImage?.asset);
 
   return (
-    <section className={`relative min-h-[70vh] md:min-h-[80vh] flex items-center ${!hasImage ? "bg-muted/40 border-b border-border" : ""}`}>
+    <section className={`relative min-h-[calc(100vh-140px)] md:min-h-[calc(100vh-100px)] flex items-center justify-center py-20 md:py-28 ${
+      !hasImage ? "bg-muted/40 border-b border-border" : ""
+    }`}>
+      {/* Background Image & Overlay */}
       {hasImage && (
         <div className="absolute inset-0 z-0">
           <SanityImage
@@ -49,42 +52,48 @@ export function HeroSection({ data }: HeroSectionProps) {
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/75 to-black/60" />
         </div>
       )}
 
-      <div className="relative z-10 container mx-auto px-4 py-20 md:py-28">
-        <div className="max-w-3xl">
+      <div className="relative z-10 container mx-auto px-4">
+        <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
           <FadeIn direction="up" duration={0.6}>
-            {/* Lokasyon & Güven Veren Rozet */}
-            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-semibold uppercase tracking-wider mb-6 border ${
-              hasImage ? "bg-white/10 text-white border-white/20" : "bg-card text-foreground border-border"
-            }`}>
-              <RiMapPinLine className="text-primary size-3.5" />
-              <span>Tecde, Yeşilyurt / Malatya</span>
-            </div>
-
             {/* Dev Başlık - Barlow Condensed */}
-            <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 uppercase ${
-              hasImage ? "text-white" : "text-foreground"
+            <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 uppercase leading-[1.08] ${
+              hasImage ? "text-white drop-shadow-sm" : "text-foreground"
             }`}>
               {data?.heroTitle || "Banyo, Isıtma ve Tesisat Ürünleri Tek Adreste."}
             </h1>
 
             {/* Açıklama */}
-            <p className={`text-lg md:text-xl font-normal leading-relaxed mb-8 max-w-2xl ${
-              hasImage ? "text-white/80" : "text-muted-foreground"
+            <p className={`text-lg sm:text-xl md:text-2xl font-normal leading-relaxed mb-10 max-w-3xl mx-auto ${
+              hasImage ? "text-white/90" : "text-muted-foreground"
             }`}>
-              {data?.heroSubtitle || "GPD, E.C.A. ve SEREL markalarının kaliteli ve güvenilir ürünlerini ER YAPI showroomunda inceleyin."}
+              {data?.heroSubtitle || "GPD, E.C.A. ve SEREL markalarının kaliteli ve güvenilir ürünlerini ER YAPI güvencesiyle yerinde inceleyin."}
             </p>
 
-            {/* Butonlar */}
-            <div className="flex flex-wrap items-center gap-4">
-              <Button size="lg" render={<Link href={resolveLink(data?.heroCtaLink)} />}>
-                <RiStore2Line className="mr-2" />
+            {/* Butonlar - İkincil buton okunaklı ve yüksek kontrastlı */}
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Button
+                size="lg"
+                className="h-14 px-8 text-base md:text-lg font-semibold shadow-md"
+                render={<Link href={resolveLink(data?.heroCtaLink)} />}
+              >
+                <RiStore2Line className="mr-2.5 size-5" />
                 {data?.heroCtaLabel || "Ürün Kataloğunu İncele"}
               </Button>
-              <Button size="lg" variant="outline" render={<Link href="/iletisim" />}>
+
+              <Button
+                size="lg"
+                className={`h-14 px-8 text-base md:text-lg font-semibold shadow-md ${
+                  hasImage
+                    ? "bg-zinc-900 border border-zinc-700 text-white hover:bg-black hover:text-white"
+                    : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                }`}
+                render={<Link href="/iletisim" />}
+              >
+                <RiPhoneLine className="mr-2.5 size-5 text-primary" />
                 İletişime Geçin
               </Button>
             </div>

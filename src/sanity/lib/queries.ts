@@ -30,7 +30,7 @@ export const homePageQuery = groq`*[_type == "homePage"][0] {
     internal->{ _type, "slug": slug.current }
   },
   heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
-  aboutTitle, aboutSubtitle, aboutText,
+  aboutTitle, aboutSubtitle, aboutText, aboutTrustCards,
   aboutImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   aboutCtaLabel, aboutCtaLink,
   categoriesTitle, categoriesSubtitle,

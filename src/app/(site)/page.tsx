@@ -95,6 +95,7 @@ export default async function HomePage() {
         title={data?.aboutTitle}
         subtitle={data?.aboutSubtitle}
         text={data?.aboutText}
+        trustCards={data?.aboutTrustCards}
         image={data?.aboutImage}
         ctaLabel={data?.aboutCtaLabel}
         ctaLink={data?.aboutCtaLink}

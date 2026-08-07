@@ -9,7 +9,8 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { RiMailLine, RiPhoneLine, RiMapPinLine } from "react-icons/ri";
+import { RiMailLine, RiPhoneLine, RiMapPinLine, RiTimeLine, RiExternalLinkLine } from "react-icons/ri";
+import { SanityImage } from "@/components/ui/SanityImage";
 
 import { SiteSettings, Navigation } from "@/types";
 
@@ -54,94 +55,141 @@ export function Footer({ settings, navigation }: { settings: SiteSettings; navig
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t bg-background">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+    <footer className="border-t bg-card text-foreground">
+      <div className="container mx-auto px-4 py-16 md:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-16">
 
-          {/* Marka & İletişim */}
-          <div className="space-y-4">
-            <h3 className="font-bold text-lg">{settings?.siteName}</h3>
-            {settings?.siteTagline && (
-              <p className="text-sm text-muted-foreground">{settings.siteTagline}</p>
-            )}
-            <div className="space-y-2">
-              {contact?.phone && (
-                <a
-                  href={`tel:${contact.phone}`}
-                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <RiPhoneLine className="shrink-0" />
-                  {contact.phone}
-                </a>
-              )}
-              {contact?.email && (
-                <a
-                  href={`mailto:${contact.email}`}
-                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <RiMailLine className="shrink-0" />
-                  {contact.email}
-                </a>
-              )}
-              {contact?.address && (
-                <p className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <RiMapPinLine className="shrink-0 mt-0.5" />
-                  {contact.address}
-                </p>
-              )}
+          {/* Sütun 1: Logo & Mağaza Tanımı */}
+          <div className="lg:col-span-5 space-y-6">
+            <Link href="/" className="inline-block group">
+              <div className="relative flex items-center justify-start h-16 max-w-[280px]">
+                {settings?.logo ? (
+                  <SanityImage
+                    image={settings.logo}
+                    width={600}
+                    height={160}
+                    fit="max"
+                    className="h-full w-auto object-contain object-left"
+                  />
+                ) : (
+                  <span className="font-bold text-2xl tracking-tight leading-none text-foreground uppercase">
+                    {settings?.siteName || "ER YAPI"}
+                  </span>
+                )}
+              </div>
+            </Link>
+
+            <p className="text-base text-muted-foreground leading-relaxed">
+              {settings?.siteTagline || "GPD, E.C.A. ve SEREL yetkili satıcı güvencesiyle Malatya Tecde'de banyo bataryaları, kombi, klima ve tesisat malzemelerinde kaliteli çözümler sunuyoruz."}
+            </p>
+
+            {/* Çalışma Saatleri */}
+            <div className="p-4 rounded-xl border bg-muted/40 text-sm space-y-1.5 inline-block w-full">
+              <p className="font-semibold text-foreground flex items-center gap-2">
+                <RiTimeLine className="text-primary size-4" />
+                <span>Çalışma Saatlerimiz</span>
+              </p>
+              <p className="text-xs md:text-sm text-muted-foreground pl-6">
+                Hafta İçi & Cumartesi: 08:00 - 19:00 | Pazar: Kapalı
+              </p>
             </div>
           </div>
 
-          {/* Footer Linkleri */}
-          {footerLinks.length > 0 && (
-            <div className="space-y-4">
-              <h3 className="font-bold text-sm uppercase tracking-wider">Hızlı Linkler</h3>
-              <nav className="space-y-2">
-                {footerLinks.map((item, i) => (
-                  <Link
-                    key={i}
-                    href={resolveHref(item)}
-                    target={item.openInNewTab ? "_blank" : undefined}
-                    rel={item.openInNewTab ? "noopener noreferrer" : undefined}
-                    className="block text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-            </div>
-          )}
+          {/* Sütun 2: Hızlı Bağlantılar */}
+          <div className="lg:col-span-3 space-y-4">
+            <h4 className="font-bold text-base uppercase tracking-wider text-foreground">Hızlı Bağlantılar</h4>
+            <nav className="space-y-3">
+              {footerLinks.map((item, i) => (
+                <Link
+                  key={i}
+                  href={resolveHref(item)}
+                  target={item.openInNewTab ? "_blank" : undefined}
+                  rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                  className="block text-base text-muted-foreground hover:text-primary transition-colors font-medium"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
 
-          {/* Sosyal Medya */}
-          {socialLinks.length > 0 && (
-            <div className="space-y-4">
-              <h3 className="font-bold text-sm uppercase tracking-wider">Sosyal Medya</h3>
-              <div className="flex flex-wrap gap-3">
-                {socialLinks.map((social, i) => {
-                  const Icon = socialIconMap[social.platform];
-                  if (!Icon) return null;
-                  return (
+          {/* Sütun 3: Mağaza İletişim Bilgileri (Sanity siteSettings'den dinamik) */}
+          <div className="lg:col-span-4 space-y-5">
+            <h4 className="font-bold text-base uppercase tracking-wider text-foreground">Mağaza İletişim</h4>
+            
+            <div className="space-y-3 text-base">
+              {contact?.address && (
+                <div className="flex items-start gap-3 text-muted-foreground">
+                  <RiMapPinLine className="shrink-0 text-primary size-5 mt-0.5" />
+                  <div>
+                    <p className="text-foreground font-semibold">ER YAPI Mağazamız</p>
+                    <p className="text-sm md:text-base">{contact.address}</p>
                     <a
-                      key={i}
-                      href={social.url}
+                      href={`https://maps.google.com/?q=${encodeURIComponent(contact.address)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={social.platform}
-                      className="flex h-9 w-9 items-center justify-center rounded-full border text-muted-foreground hover:text-primary hover:border-primary transition-colors"
+                      className="inline-flex items-center gap-1 text-xs md:text-sm text-primary font-semibold hover:underline mt-1"
                     >
-                      <Icon size={16} />
+                      <span>Google Haritalarda Aç</span>
+                      <RiExternalLinkLine className="size-3.5" />
                     </a>
-                  );
-                })}
-              </div>
+                  </div>
+                </div>
+              )}
+
+              {contact?.phone && (
+                <a
+                  href={`tel:${contact.phone}`}
+                  className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors font-medium"
+                >
+                  <RiPhoneLine className="shrink-0 text-primary size-5" />
+                  <span>{contact.phone}</span>
+                </a>
+              )}
+
+              {contact?.email && (
+                <a
+                  href={`mailto:${contact.email}`}
+                  className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors font-medium"
+                >
+                  <RiMailLine className="shrink-0 text-primary size-5" />
+                  <span>{contact.email}</span>
+                </a>
+              )}
             </div>
-          )}
+
+            {/* Sosyal Medya */}
+            {socialLinks.length > 0 && (
+              <div className="pt-3 border-t">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Sosyal Medyada Biz</p>
+                <div className="flex flex-wrap gap-3">
+                  {socialLinks.map((social, i) => {
+                    const Icon = socialIconMap[social.platform];
+                    if (!Icon) return null;
+                    return (
+                      <a
+                        key={i}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={social.platform}
+                        className="flex h-10 w-10 items-center justify-center rounded-lg border bg-background text-muted-foreground hover:text-primary hover:border-primary transition-colors shadow-xs"
+                      >
+                        <Icon size={18} />
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
         </div>
 
-        {/* Alt Bar */}
-        <div className="mt-12 border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground w-full text-center sm:text-left">
-            © {currentYear} {settings?.siteName}. Tüm hakları saklıdır.
+        {/* Telif Barı (GPD/ECA/SEREL marka metin şeridi kaldırıldı) */}
+        <div className="mt-16 border-t pt-8 flex items-center justify-between">
+          <p className="text-sm md:text-base text-muted-foreground text-center md:text-left font-medium w-full">
+            © {currentYear} {settings?.siteName || "ER YAPI"}. Tüm hakları saklıdır.
           </p>
         </div>
       </div>

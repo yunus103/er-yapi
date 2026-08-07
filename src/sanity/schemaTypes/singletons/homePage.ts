@@ -6,7 +6,7 @@ export const homePageType = defineType({
   type: "document",
   initialValue: {
     heroTitle: "Banyo, Isıtma ve Tesisat Ürünleri Tek Adreste.",
-    heroSubtitle: "GPD, E.C.A. ve SEREL markalarının kaliteli ve güvenilir ürünlerini ER YAPI showroomunda inceleyin.",
+    heroSubtitle: "GPD, E.C.A. ve SEREL markalarının kaliteli ve güvenilir ürünlerini ER YAPI mağazamızda inceleyin.",
     heroCtaLabel: "Ürünleri İncele",
     categoriesTitle: "Ürün Gruplarımız",
     categoriesSubtitle: "İhtiyacınıza uygun ısıtma, banyo ve tesisat çözümleri.",
@@ -14,10 +14,24 @@ export const homePageType = defineType({
     productsSubtitle: "GPD, E.C.A. ve SEREL'in öne çıkan banyo, kombi, klima ve armatür çözümleri.",
     brandsTitle: "Çalıştığımız Markalar",
     brandsSubtitle: "Sektörünün lider markaları GPD, E.C.A. ve SEREL yetkili satıcısı.",
+    aboutTrustCards: [
+      {
+        title: "Orijinal Marka Garantisi",
+        desc: "GPD, E.C.A. ve SEREL markalarının %100 orijinal ve garantili ürünlerini sunuyoruz.",
+      },
+      {
+        title: "Geniş Mağaza Stoku",
+        desc: "İnşaat ve banyo yenileme projeleriniz için stoktan bekletmeden hızlı teslimat sağlıyoruz.",
+      },
+      {
+        title: "Teknik Danışmanlık & Destek",
+        desc: "Tesisat ve iklimlendirme projelerinizde doğru ürün seçimi için teknik ekibimizle yanınızdayız.",
+      },
+    ],
   },
   groups: [
     { name: "hero", title: "Hero Bölümü" },
-    { name: "about", title: "Showroom & Hakkımızda" },
+    { name: "about", title: "Mağaza & Hakkımızda" },
     { name: "categories", title: "Ürün Kategorileri" },
     { name: "products", title: "Öne Çıkan Ürünler" },
     { name: "brands", title: "Markalar Bölümü" },
@@ -80,19 +94,37 @@ export const homePageType = defineType({
       of: [{ type: "reference", to: [{ type: "brand" }] }],
     }),
 
-    // About/Showroom Group
-    defineField({ name: "aboutTitle", title: "Showroom Bölüm Başlığı", type: "string", group: "about", initialValue: "ER YAPI Showroom" }),
-    defineField({ name: "aboutSubtitle", title: "Showroom Alt Başlığı", type: "text", rows: 2, group: "about" }),
-    defineField({ name: "aboutText", title: "Showroom Tanıtım Yazısı", type: "array", of: [{ type: "block" }], group: "about" }),
+    // About Group
+    defineField({ name: "aboutTitle", title: "Mağaza Bölüm Başlığı", type: "string", group: "about", initialValue: "ER YAPI Mağazamız" }),
+    defineField({ name: "aboutSubtitle", title: "Mağaza Alt Başlığı", type: "text", rows: 2, group: "about" }),
+    defineField({ name: "aboutText", title: "Mağaza Tanıtım Yazısı", type: "array", of: [{ type: "block" }], group: "about" }),
+    defineField({
+      name: "aboutTrustCards",
+      title: "Güven Vurgu Kartları (3 Adet)",
+      description: "Mağaza tanıtımının altında sergilenecek 3 adet vurgu kartı.",
+      type: "array",
+      group: "about",
+      of: [
+        {
+          type: "object",
+          name: "trustCard",
+          title: "Güven Kartı",
+          fields: [
+            defineField({ name: "title", title: "Kart Başlığı", type: "string" }),
+            defineField({ name: "desc", title: "Kart Açıklaması", type: "text", rows: 2 }),
+          ],
+        },
+      ],
+    }),
     defineField({
       name: "aboutImage",
-      title: "Showroom Görseli",
+      title: "Mağaza Görseli",
       type: "image",
       group: "about",
       options: { hotspot: true },
       fields: [defineField({ name: "alt", title: "Alt Metni", type: "string" })],
     }),
-    defineField({ name: "aboutCtaLabel", title: "Buton Metni", type: "string", group: "about", initialValue: "Hakkımızda" }),
+    defineField({ name: "aboutCtaLabel", title: "Buton Metni", type: "string", group: "about", initialValue: "Hakkımızda Detaylı Bilgi" }),
     defineField({ name: "aboutCtaLink", title: "Buton Linki", type: "string", group: "about", initialValue: "/hakkimizda" }),
 
     // Blog Preview Group

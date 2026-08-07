@@ -231,6 +231,11 @@ export type BlogPage = InnerPageWithCta;
 export type ServicesPage = InnerPageWithCta;
 export type ProjectsPage = InnerPageWithCta;
 
+export interface AboutTrustCard {
+  title: string;
+  desc: string;
+}
+
 export interface HomePage {
   heroTitle: string;
   heroSubtitle?: string;
@@ -240,6 +245,7 @@ export interface HomePage {
   aboutTitle?: string;
   aboutSubtitle?: string;
   aboutText?: any[];
+  aboutTrustCards?: AboutTrustCard[];
   aboutImage?: SanityImage;
   aboutCtaLabel?: string;
   aboutCtaLink?: string;
