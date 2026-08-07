@@ -40,7 +40,15 @@ function resolveHref(item: NavItem): string {
 }
 
 export function Footer({ settings, navigation }: { settings: SiteSettings; navigation: Navigation }) {
-  const footerLinks: NavItem[] = navigation?.footerLinks || [];
+  const defaultFooterLinks: NavItem[] = [
+    { label: "Ana Sayfa", href: "/" },
+    { label: "Ürünler", href: "/urunler" },
+    { label: "Hakkımızda", href: "/hakkimizda" },
+    { label: "İletişim", href: "/iletisim" },
+  ];
+  const footerLinks: NavItem[] = (navigation?.footerLinks && navigation.footerLinks.length > 0)
+    ? navigation.footerLinks
+    : defaultFooterLinks;
   const socialLinks: SocialLink[] = (settings?.socialLinks || []).filter((s: SocialLink) => s.url);
   const contact = settings?.contactInfo;
   const currentYear = new Date().getFullYear();

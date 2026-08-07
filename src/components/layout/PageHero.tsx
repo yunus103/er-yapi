@@ -32,7 +32,7 @@ export function PageHero({
           <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
         </div>
       ) : (
-        <div className="absolute inset-0 z-0 bg-gradient-to-r from-primary/10 via-primary/5 to-background" />
+        <div className="absolute inset-0 z-0 bg-muted/70 border-b border-border" />
       )}
 
       {/* Content */}

@@ -22,6 +22,7 @@ type CollectionConfig = {
 };
 
 const collectionConfig: Record<string, CollectionConfig> = {
+  product: { detailPrefix: "product:detail", listTag: "product:list" },
   blogPost: { detailPrefix: "blog:detail", listTag: "blog:list" },
   service: { detailPrefix: "service:detail", listTag: "service:list" },
   project: { detailPrefix: "project:detail", listTag: "project:list" },
@@ -34,6 +35,7 @@ const singletonTags: Record<string, string> = {
   aboutPage: "about",
   contactPage: "contact",
   blogPage: "blogPage",
+  productsPage: "productsPage",
   servicesPage: "servicesPage",
   projectsPage: "projectsPage",
   faq: "faq",
@@ -44,6 +46,7 @@ const sitemapPageTypes = new Set([
   "aboutPage",
   "contactPage",
   "blogPage",
+  "productsPage",
   "servicesPage",
   "projectsPage",
 ]);
@@ -102,9 +105,22 @@ function getRevalidationTags(
           tags.add(`blog:related:${previousCategoryId}`);
         }
       }
+      if (documentType === "product") {
+        if (categoryId) tags.add(`product:related:${categoryId}`);
+        if (previousCategoryId) {
+          tags.add(`product:related:${previousCategoryId}`);
+        }
+      }
     }
 
     if (inventoryChanged) tags.add("sitemap");
+    return [...tags];
+  }
+
+  if (documentType === "productCategory" || documentType === "brand") {
+    tags.add("product:list");
+    tags.add("product:categories");
+    tags.add("home:featured");
     return [...tags];
   }
 

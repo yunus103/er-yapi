@@ -9,10 +9,14 @@ import { contactPageType } from "./singletons/contactPage";
 import { blogPageType } from "./singletons/blogPage";
 import { servicesPageType } from "./singletons/servicesPage";
 import { projectsPageType } from "./singletons/projectsPage";
+import { productsPageType } from "./singletons/productsPage";
 import { blogPostType } from "./documents/blogPost";
 import { blogCategoryType } from "./documents/blogCategory";
 import { serviceType } from "./documents/service";
 import { projectType } from "./documents/project";
+import { productType } from "./documents/product";
+import { productCategoryType } from "./documents/productCategory";
+import { brandType } from "./documents/brand";
 import { faqType } from "./documents/faq";
 
 export const schemaTypes = [
@@ -27,13 +31,16 @@ export const schemaTypes = [
   aboutPageType,
   contactPageType,
   blogPageType,
+  productsPageType,
   servicesPageType,
   projectsPageType,
   // Collections
+  productType,
+  productCategoryType,
+  brandType,
   blogPostType,
   blogCategoryType,
   serviceType,
   projectType,
   faqType,
 ];
-

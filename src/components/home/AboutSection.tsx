@@ -23,32 +23,37 @@ export function AboutSection({
   ctaLabel,
   ctaLink,
 }: AboutSectionProps) {
-  // Graceful fallback values
-  const displayTitle = title || "Hakkımızda";
-  const displayCtaLabel = ctaLabel || "Devamını Oku";
+  const displayTitle = title || "ER YAPI Showroom";
+  const displayCtaLabel = ctaLabel || "Hakkımızda";
   const displayCtaLink = ctaLink || "/hakkimizda";
 
   return (
-    <section className="py-20 md:py-28 overflow-hidden bg-background">
+    <section className="py-20 md:py-28 overflow-hidden bg-background border-t border-border">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* Sol Kolon: Metinler */}
           <div className="lg:col-span-7 space-y-6">
             <FadeIn direction="up">
-              <span className="text-sm font-semibold tracking-wider text-primary uppercase">
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground uppercase">
                 {displayTitle}
-              </span>
+              </h2>
               {subtitle && (
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight mt-2 text-foreground">
+                <p className="text-lg text-muted-foreground mt-2 font-medium">
                   {subtitle}
-                </h2>
+                </p>
               )}
             </FadeIn>
 
-            {text && text.length > 0 && (
+            {text && text.length > 0 ? (
               <FadeIn delay={0.15}>
                 <RichText value={text} className="text-muted-foreground" />
+              </FadeIn>
+            ) : (
+              <FadeIn delay={0.15}>
+                <p className="text-muted-foreground leading-relaxed">
+                  Malatya Tecde'deki aydınlık mağazamızda GPD armatür ve duş sistemleri, E.C.A. kombi ve iklimlendirme çözümleri ile SEREL banyo ürünlerini yakından inceleyebilirsiniz. Uzman ekibimiz ve geniş ürün stokuyla projenize en uygun teknik çözümleri sunuyoruz.
+                </p>
               </FadeIn>
             )}
 
@@ -63,9 +68,7 @@ export function AboutSection({
           {image && (
             <div className="lg:col-span-5 relative">
               <FadeIn direction="left" delay={0.3} className="relative">
-                {/* Decorative Elements for premium look */}
-                <div className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-primary/20 to-transparent blur-2xl z-0" />
-                <div className="relative aspect-[4/3] sm:aspect-[3/2] lg:aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl z-10 border bg-card">
+                <div className="relative aspect-[5/3] rounded-xl overflow-hidden shadow-lg border bg-card">
                   <SanityImage
                     image={image}
                     fill

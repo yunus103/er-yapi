@@ -4,6 +4,17 @@ export const siteSettingsType = defineType({
   name: "siteSettings",
   title: "Site Ayarları",
   type: "document",
+  initialValue: {
+    siteName: "ER YAPI",
+    siteTagline: "Banyo, Isıtma ve Tesisat Malzemeleri",
+    defaultSeo: {
+      metaTitle: "ER YAPI | Banyo, Isıtma ve Tesisat Malzemeleri - Malatya",
+      metaDescription: "Malatya Tecde'de GPD, E.C.A. ve SEREL markalarının armatür, banyo, kombi, klima ve tesisat ürünleri ER YAPI showroomunda.",
+    },
+    contactInfo: {
+      address: "Tecde, Yeşilyurt/Malatya",
+    },
+  },
   fields: [
     defineField({ name: "siteName", title: "Site Adı", type: "string", validation: (Rule) => Rule.required() }),
     defineField({ name: "siteTagline", title: "Slogan", type: "string" }),

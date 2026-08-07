@@ -18,7 +18,15 @@ function resolveHref(item: NavItem): string {
 export function Header({ settings, navigation }: { settings: SiteSettings; navigation: Navigation }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const links: NavItem[] = navigation?.headerLinks || [];
+  const defaultLinks: NavItem[] = [
+    { label: "Ana Sayfa", href: "/" },
+    { label: "Ürünler", href: "/urunler" },
+    { label: "Hakkımızda", href: "/hakkimizda" },
+    { label: "İletişim", href: "/iletisim" },
+  ];
+  const links: NavItem[] = (navigation?.headerLinks && navigation.headerLinks.length > 0)
+    ? navigation.headerLinks
+    : defaultLinks;
 
   // Sayfa değiştiğinde menüyü kapat
   useEffect(() => {

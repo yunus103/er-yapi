@@ -2,17 +2,20 @@ import { Metadata } from "next";
 import { cachedFetch } from "@/sanity/lib/client";
 import {
   homePageQuery,
-  serviceFallbackQuery,
-  projectFallbackQuery,
+  productFallbackQuery,
+  productCategoriesQuery,
+  brandListQuery,
   blogFallbackQuery,
 } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
 import { HeroSection } from "@/components/home/HeroSection";
 import { AboutSection } from "@/components/home/AboutSection";
-import { ServicesSection } from "@/components/home/ServicesSection";
-import { ProjectsSection } from "@/components/home/ProjectsSection";
+import { CategoriesSection } from "@/components/home/CategoriesSection";
+import { ProductsSection } from "@/components/home/ProductsSection";
+import { BrandsSection } from "@/components/home/BrandsSection";
 import { BlogSection } from "@/components/home/BlogSection";
-import { HomePage as HomePageType, Service, Project, BlogPost } from "@/types";
+import { ContactCtaSection } from "@/components/home/ContactCtaSection";
+import { HomePage as HomePageType, Product, ProductCategory, Brand, BlogPost } from "@/types";
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await cachedFetch<HomePageType>(homePageQuery, {}, { next: { tags: ["home", "home:featured"] } });
@@ -23,35 +26,39 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  // 1. First fetch the main homepage configuration
   const data = await cachedFetch<HomePageType>(homePageQuery, {}, { next: { tags: ["home", "home:featured"] } });
 
-  // 2. Determine if fallback queries are actually needed
-  const needsFallbackServices = !data?.featuredServices || data.featuredServices.length === 0;
-  const needsFallbackProjects = !data?.featuredProjects || data.featuredProjects.length === 0;
+  const needsFallbackProducts = !data?.featuredProducts || data.featuredProducts.length === 0;
+  const needsCategories = !data?.featuredCategories || data.featuredCategories.length === 0;
+  const needsBrands = !data?.featuredBrands || data.featuredBrands.length === 0;
   const needsFallbackPosts = !data?.featuredPosts || data.featuredPosts.length === 0;
 
-  // 3. Fetch fallbacks in parallel only if necessary
-  const [fallbackServices, fallbackProjects, fallbackPosts] = await Promise.all([
-    needsFallbackServices
-      ? cachedFetch<Service[]>(serviceFallbackQuery, {}, { next: { tags: ["service:list"] } })
+  const [fallbackProducts, allCategories, allBrands, fallbackPosts] = await Promise.all([
+    needsFallbackProducts
+      ? cachedFetch<Product[]>(productFallbackQuery, {}, { next: { tags: ["product:list"] } })
       : Promise.resolve([]),
-    needsFallbackProjects
-      ? cachedFetch<Project[]>(projectFallbackQuery, {}, { next: { tags: ["project:list"] } })
+    needsCategories
+      ? cachedFetch<ProductCategory[]>(productCategoriesQuery, {}, { next: { tags: ["product:categories"] } })
+      : Promise.resolve([]),
+    needsBrands
+      ? cachedFetch<Brand[]>(brandListQuery, {}, { next: { tags: ["product:categories"] } })
       : Promise.resolve([]),
     needsFallbackPosts
       ? cachedFetch<BlogPost[]>(blogFallbackQuery, {}, { next: { tags: ["blog:list", "blog:categories"] } })
       : Promise.resolve([]),
   ]);
 
-  // Determine which items to display (Sanity references or dynamic fallbacks)
-  const servicesToDisplay = data?.featuredServices && data.featuredServices.length > 0
-    ? data.featuredServices
-    : fallbackServices;
+  const productsToDisplay = data?.featuredProducts && data.featuredProducts.length > 0
+    ? data.featuredProducts
+    : fallbackProducts;
 
-  const projectsToDisplay = data?.featuredProjects && data.featuredProjects.length > 0
-    ? data.featuredProjects
-    : fallbackProjects;
+  const categoriesToDisplay = data?.featuredCategories && data.featuredCategories.length > 0
+    ? data.featuredCategories
+    : allCategories;
+
+  const brandsToDisplay = data?.featuredBrands && data.featuredBrands.length > 0
+    ? data.featuredBrands
+    : allBrands;
 
   const postsToDisplay = data?.featuredPosts && data.featuredPosts.length > 0
     ? data.featuredPosts
@@ -62,7 +69,28 @@ export default async function HomePage() {
       {/* 1. Hero Section */}
       <HeroSection data={data} />
 
-      {/* 2. Hakkımızda Bölümü */}
+      {/* 2. Ürün Kategorileri */}
+      <CategoriesSection
+        title={data?.categoriesTitle}
+        subtitle={data?.categoriesSubtitle}
+        categories={categoriesToDisplay}
+      />
+
+      {/* 3. Öne Çıkan Ürünler */}
+      <ProductsSection
+        title={data?.productsTitle}
+        subtitle={data?.productsSubtitle}
+        products={productsToDisplay}
+      />
+
+      {/* 4. Markalar Bölümü (GPD, E.C.A., SEREL) */}
+      <BrandsSection
+        title={data?.brandsTitle}
+        subtitle={data?.brandsSubtitle}
+        brands={brandsToDisplay}
+      />
+
+      {/* 5. Showroom & Hakkımızda */}
       <AboutSection
         title={data?.aboutTitle}
         subtitle={data?.aboutSubtitle}
@@ -72,26 +100,8 @@ export default async function HomePage() {
         ctaLink={data?.aboutCtaLink}
       />
 
-      {/* 3. Öne Çıkan Hizmetler */}
-      <ServicesSection
-        title={data?.servicesTitle}
-        subtitle={data?.servicesSubtitle}
-        services={servicesToDisplay}
-      />
-
-      {/* 4. Öne Çıkan Projeler */}
-      <ProjectsSection
-        title={data?.projectsTitle}
-        subtitle={data?.projectsSubtitle}
-        projects={projectsToDisplay}
-      />
-
-      {/* 5. Son Blog Yazıları */}
-      <BlogSection
-        title={data?.blogTitle}
-        subtitle={data?.blogSubtitle}
-        posts={postsToDisplay}
-      />
+      {/* 6. İletişim & Stok/Fiyat CTA Panosu */}
+      <ContactCtaSection />
     </div>
   );
 }

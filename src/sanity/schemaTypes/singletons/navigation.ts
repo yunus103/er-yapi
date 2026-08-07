@@ -29,6 +29,22 @@ export const navigationType = defineType({
   name: "navigation",
   title: "Navigasyon",
   type: "document",
+  initialValue: {
+    headerLinks: [
+      { label: "Ana Sayfa", href: "/" },
+      { label: "Ürünler", href: "/urunler" },
+      { label: "Hakkımızda", href: "/hakkimizda" },
+      { label: "Blog", href: "/blog" },
+      { label: "İletişim", href: "/iletisim" },
+    ],
+    footerLinks: [
+      { label: "Ana Sayfa", href: "/" },
+      { label: "Ürünler", href: "/urunler" },
+      { label: "Hakkımızda", href: "/hakkimizda" },
+      { label: "Blog", href: "/blog" },
+      { label: "İletişim", href: "/iletisim" },
+    ],
+  },
   fields: [
     defineField({
       name: "headerLinks",

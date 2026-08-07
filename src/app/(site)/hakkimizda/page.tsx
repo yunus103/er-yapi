@@ -49,7 +49,7 @@ export default async function AboutPage() {
           <div className="lg:col-span-5 lg:sticky lg:top-24">
             {data?.mainImage && (
               <FadeIn direction="left" delay={0.3}>
-                <div className="relative aspect-[4/3] sm:aspect-[3/2] lg:aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl">
+                <div className="relative aspect-[5/3] rounded-2xl overflow-hidden shadow-xl border bg-card">
                   <SanityImage
                     image={data.mainImage}
                     fill

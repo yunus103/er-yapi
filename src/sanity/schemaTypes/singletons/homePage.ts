@@ -4,11 +4,23 @@ export const homePageType = defineType({
   name: "homePage",
   title: "Ana Sayfa",
   type: "document",
+  initialValue: {
+    heroTitle: "Banyo, Isıtma ve Tesisat Ürünleri Tek Adreste.",
+    heroSubtitle: "GPD, E.C.A. ve SEREL markalarının kaliteli ve güvenilir ürünlerini ER YAPI showroomunda inceleyin.",
+    heroCtaLabel: "Ürünleri İncele",
+    categoriesTitle: "Ürün Gruplarımız",
+    categoriesSubtitle: "İhtiyacınıza uygun ısıtma, banyo ve tesisat çözümleri.",
+    productsTitle: "Öne Çıkan Ürünler",
+    productsSubtitle: "GPD, E.C.A. ve SEREL'in öne çıkan banyo, kombi, klima ve armatür çözümleri.",
+    brandsTitle: "Çalıştığımız Markalar",
+    brandsSubtitle: "Sektörünün lider markaları GPD, E.C.A. ve SEREL yetkili satıcısı.",
+  },
   groups: [
     { name: "hero", title: "Hero Bölümü" },
-    { name: "about", title: "Hakkımızda Önizleme" },
-    { name: "services", title: "Hizmetler Önizleme" },
-    { name: "projects", title: "Projeler Önizleme" },
+    { name: "about", title: "Showroom & Hakkımızda" },
+    { name: "categories", title: "Ürün Kategorileri" },
+    { name: "products", title: "Öne Çıkan Ürünler" },
+    { name: "brands", title: "Markalar Bölümü" },
     { name: "blog", title: "Blog Önizleme" },
     { name: "seo", title: "SEO Ayarları" },
   ],
@@ -22,97 +34,73 @@ export const homePageType = defineType({
       type: "image",
       group: "hero",
       options: { hotspot: true },
-      fields: [defineField({ name: "alt", title: "Alt Metni", type: "string", validation: (Rule) => Rule.required() })],
+      fields: [defineField({ name: "alt", title: "Alt Metni", type: "string" })],
     }),
     defineField({ name: "heroCtaLabel", title: "Hero Buton Metni", type: "string", group: "hero" }),
     defineField({
       name: "heroCtaLink",
       title: "Hero Buton Linki",
-      type: "object",
+      type: "string",
       group: "hero",
-      fields: [
-        defineField({
-          name: "linkType",
-          title: "Link Tipi",
-          type: "string",
-          options: {
-            list: [
-              { title: "İç Sayfa (Önerilen)", value: "internal" },
-              { title: "Manuel Link", value: "manual" },
-            ],
-            layout: "radio",
-          },
-          initialValue: "internal",
-        }),
-        defineField({
-          name: "internal",
-          title: "İç Sayfa Seç",
-          type: "reference",
-          to: [
-            { type: "service" },
-            { type: "project" },
-            { type: "blogPost" },
-            { type: "aboutPage" },
-            { type: "contactPage" },
-          ],
-          hidden: ({ parent }) => parent?.linkType !== "internal",
-        }),
-        defineField({
-          name: "manual",
-          title: "Manuel Link",
-          type: "string",
-          description: "Örn: /blog, /galeri veya https://google.com (Link başındaki / işaretini unutmayın)",
-          hidden: ({ parent }) => parent?.linkType !== "manual",
-        }),
-      ],
+      initialValue: "/urunler",
+      description: "Örn: /urunler veya /iletisim",
     }),
 
-    // About Preview Group
-    defineField({ name: "aboutTitle", title: "Hakkımızda Bölüm Başlığı", type: "string", group: "about", initialValue: "Hakkımızda" }),
-    defineField({ name: "aboutSubtitle", title: "Hakkımızda Bölüm Alt Başlığı", type: "text", rows: 2, group: "about" }),
-    defineField({ name: "aboutText", title: "Hakkımızda Kısa Yazı", type: "array", of: [{ type: "block" }], group: "about" }),
+    // Categories Group
+    defineField({ name: "categoriesTitle", title: "Kategori Bölüm Başlığı", type: "string", group: "categories", initialValue: "Ürün Gruplarımız" }),
+    defineField({ name: "categoriesSubtitle", title: "Kategori Bölüm Alt Başlığı", type: "text", rows: 2, group: "categories" }),
+    defineField({
+      name: "featuredCategories",
+      title: "Öne Çıkan Kategoriler",
+      type: "array",
+      group: "categories",
+      of: [{ type: "reference", to: [{ type: "productCategory" }] }],
+    }),
+
+    // Products Group
+    defineField({ name: "productsTitle", title: "Ürünler Bölüm Başlığı", type: "string", group: "products", initialValue: "Öne Çıkan Ürünler" }),
+    defineField({ name: "productsSubtitle", title: "Ürünler Bölüm Alt Başlığı", type: "text", rows: 2, group: "products" }),
+    defineField({
+      name: "featuredProducts",
+      title: "Öne Çıkan Ürünler Seçimi",
+      description: "Ana sayfada vitrine çıkarılacak ürünleri seçin ve sıralayın.",
+      type: "array",
+      group: "products",
+      of: [{ type: "reference", to: [{ type: "product" }] }],
+    }),
+
+    // Brands Group
+    defineField({ name: "brandsTitle", title: "Markalar Bölüm Başlığı", type: "string", group: "brands", initialValue: "Çalıştığımız Markalar" }),
+    defineField({ name: "brandsSubtitle", title: "Markalar Bölüm Alt Başlığı", type: "text", rows: 2, group: "brands" }),
+    defineField({
+      name: "featuredBrands",
+      title: "Gösterilecek Markalar",
+      type: "array",
+      group: "brands",
+      of: [{ type: "reference", to: [{ type: "brand" }] }],
+    }),
+
+    // About/Showroom Group
+    defineField({ name: "aboutTitle", title: "Showroom Bölüm Başlığı", type: "string", group: "about", initialValue: "ER YAPI Showroom" }),
+    defineField({ name: "aboutSubtitle", title: "Showroom Alt Başlığı", type: "text", rows: 2, group: "about" }),
+    defineField({ name: "aboutText", title: "Showroom Tanıtım Yazısı", type: "array", of: [{ type: "block" }], group: "about" }),
     defineField({
       name: "aboutImage",
-      title: "Hakkımızda Görseli",
+      title: "Showroom Görseli",
       type: "image",
       group: "about",
       options: { hotspot: true },
       fields: [defineField({ name: "alt", title: "Alt Metni", type: "string" })],
     }),
-    defineField({ name: "aboutCtaLabel", title: "Daha Fazla Buton Metni", type: "string", group: "about", initialValue: "Devamını Oku" }),
+    defineField({ name: "aboutCtaLabel", title: "Buton Metni", type: "string", group: "about", initialValue: "Hakkımızda" }),
     defineField({ name: "aboutCtaLink", title: "Buton Linki", type: "string", group: "about", initialValue: "/hakkimizda" }),
 
-    // Services Preview Group
-    defineField({ name: "servicesTitle", title: "Hizmetler Bölüm Başlığı", type: "string", group: "services", initialValue: "Hizmetlerimiz" }),
-    defineField({ name: "servicesSubtitle", title: "Hizmetler Bölüm Alt Başlığı", type: "text", rows: 2, group: "services" }),
-    defineField({
-      name: "featuredServices",
-      title: "Öne Çıkan Hizmetler",
-      description: "Ana sayfada gösterilecek hizmetleri seçin ve sıralayın (Sürükleyip bırakarak sıralayabilirsiniz).",
-      type: "array",
-      group: "services",
-      of: [{ type: "reference", to: [{ type: "service" }] }],
-    }),
-
-    // Projects Preview Group
-    defineField({ name: "projectsTitle", title: "Projeler Bölüm Başlığı", type: "string", group: "projects", initialValue: "Projelerimiz" }),
-    defineField({ name: "projectsSubtitle", title: "Projeler Bölüm Alt Başlığı", type: "text", rows: 2, group: "projects" }),
-    defineField({
-      name: "featuredProjects",
-      title: "Öne Çıkan Projeler",
-      description: "Ana sayfada gösterilecek projeleri seçin ve sıralayın.",
-      type: "array",
-      group: "projects",
-      of: [{ type: "reference", to: [{ type: "project" }] }],
-    }),
-
     // Blog Preview Group
-    defineField({ name: "blogTitle", title: "Blog Bölüm Başlığı", type: "string", group: "blog", initialValue: "Son Haberler & Blog" }),
+    defineField({ name: "blogTitle", title: "Blog Bölüm Başlığı", type: "string", group: "blog", initialValue: "Faydalı Bilgiler & Blog" }),
     defineField({ name: "blogSubtitle", title: "Blog Bölüm Alt Başlığı", type: "text", rows: 2, group: "blog" }),
     defineField({
       name: "featuredPosts",
       title: "Öne Çıkan Blog Yazıları",
-      description: "Ana sayfada gösterilecek blog yazılarını seçin ve sıralayın. Boş bırakılırsa en son eklenen blog yazıları otomatik gösterilir.",
       type: "array",
       group: "blog",
       of: [{ type: "reference", to: [{ type: "blogPost" }] }],

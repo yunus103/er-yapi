@@ -1,5 +1,5 @@
 import { getSiteUrl } from "@/lib/utils";
-import { SiteSettings, BlogPost, SocialLink, Service, Project } from "@/types";
+import { SiteSettings, BlogPost, SocialLink, Service, Project, Product } from "@/types";
 
 export function JsonLd({ data }: { data: Record<string, unknown> }) {
   return (
@@ -14,7 +14,7 @@ export function organizationJsonLd(settings?: SiteSettings) {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: settings?.siteName,
+    name: settings?.siteName || "ER YAPI",
     url: getSiteUrl(),
     ...(settings?.contactInfo?.phone && { telephone: settings.contactInfo.phone }),
     ...(settings?.contactInfo?.email && { email: settings.contactInfo.email }),
@@ -29,7 +29,7 @@ export function websiteJsonLd(settings?: SiteSettings) {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: settings?.siteName || "Site Adı",
+    name: settings?.siteName || "ER YAPI",
     url: getSiteUrl(),
     ...(settings?.siteTagline && { alternateName: settings.siteTagline }),
   };
@@ -37,7 +37,7 @@ export function websiteJsonLd(settings?: SiteSettings) {
 
 export function articleJsonLd(post?: BlogPost, settings?: SiteSettings) {
   const url = `${getSiteUrl()}/blog/${post?.slug?.current}`;
-  const publisherName = settings?.siteName || "Site Adı";
+  const publisherName = settings?.siteName || "ER YAPI";
 
   return {
     "@context": "https://schema.org",
@@ -66,6 +66,25 @@ export function articleJsonLd(post?: BlogPost, settings?: SiteSettings) {
       }),
     },
     description: post?.excerpt,
+  };
+}
+
+export function productJsonLd(product?: Product) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product?.title,
+    url: `${getSiteUrl()}/urunler/${product?.slug?.current}`,
+    ...(product?.productCode && { mpn: product.productCode }),
+    ...(product?.brand?.name && { brand: { "@type": "Brand", name: product.brand.name } }),
+    ...(product?.shortDescription && { description: product.shortDescription }),
+    ...(product?.mainImage?.asset?.url && { image: [product.mainImage.asset.url] }),
+    offers: {
+      "@type": "Offer",
+      availability: "https://schema.org/InStock",
+      priceCurrency: "TRY",
+      url: `${getSiteUrl()}/urunler/${product?.slug?.current}`,
+    },
   };
 }
 

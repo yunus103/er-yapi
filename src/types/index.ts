@@ -49,6 +49,63 @@ export interface BlogPost {
   seo?: SeoSettings;
 }
 
+export interface Brand {
+  _id: string;
+  name: string;
+  slug: SanitySlug;
+  logo?: SanityImage;
+  description?: string;
+  website?: string;
+  order?: number;
+  featured?: boolean;
+}
+
+export interface ProductCategory {
+  _id: string;
+  title: string;
+  slug: SanitySlug;
+  parent?: {
+    _id: string;
+    title: string;
+    slug: SanitySlug;
+  };
+  description?: string;
+  image?: SanityImage;
+  order?: number;
+  isActive?: boolean;
+}
+
+export interface ProductSpecItem {
+  key: string;
+  value: string;
+}
+
+export interface ProductDocItem {
+  title: string;
+  fileUrl?: string;
+}
+
+export interface Product {
+  _id?: string;
+  _createdAt?: string;
+  _updatedAt?: string;
+  title: string;
+  slug: SanitySlug;
+  brand?: Brand;
+  category?: ProductCategory;
+  productCode?: string;
+  series?: string;
+  shortDescription?: string;
+  mainImage?: SanityImage;
+  gallery?: SanityImage[];
+  body?: any[];
+  specifications?: ProductSpecItem[];
+  documents?: ProductDocItem[];
+  featured?: boolean;
+  order?: number;
+  seo?: SeoSettings;
+}
+
 export interface SocialLink {
   platform: string;
   url: string;
@@ -160,6 +217,16 @@ export interface InnerPageWithCta extends BasePage {
   ctaLink?: string;
 }
 
+export interface ProductsPage extends BasePage {
+  pageTitle: string;
+  pageSubtitle?: string;
+  searchPlaceholder?: string;
+  emptyStateMessage?: string;
+  contactCtaTitle?: string;
+  contactCtaDescription?: string;
+  contactCtaButtonText?: string;
+}
+
 export type BlogPage = InnerPageWithCta;
 export type ServicesPage = InnerPageWithCta;
 export type ProjectsPage = InnerPageWithCta;
@@ -176,12 +243,15 @@ export interface HomePage {
   aboutImage?: SanityImage;
   aboutCtaLabel?: string;
   aboutCtaLink?: string;
-  servicesTitle?: string;
-  servicesSubtitle?: string;
-  featuredServices?: Service[];
-  projectsTitle?: string;
-  projectsSubtitle?: string;
-  featuredProjects?: Project[];
+  categoriesTitle?: string;
+  categoriesSubtitle?: string;
+  featuredCategories?: ProductCategory[];
+  productsTitle?: string;
+  productsSubtitle?: string;
+  featuredProducts?: Product[];
+  brandsTitle?: string;
+  brandsSubtitle?: string;
+  featuredBrands?: Brand[];
   blogTitle?: string;
   blogSubtitle?: string;
   featuredPosts?: BlogPost[];

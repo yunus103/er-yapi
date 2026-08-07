@@ -33,15 +33,22 @@ export const homePageQuery = groq`*[_type == "homePage"][0] {
   aboutTitle, aboutSubtitle, aboutText,
   aboutImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   aboutCtaLabel, aboutCtaLink,
-  servicesTitle, servicesSubtitle,
-  featuredServices[]-> {
-    title, slug,
-    mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt }
+  categoriesTitle, categoriesSubtitle,
+  featuredCategories[]-> {
+    _id, title, slug, description,
+    image { asset->{ _id, url, metadata { lqip, dimensions } }, alt }
   },
-  projectsTitle, projectsSubtitle,
-  featuredProjects[]-> {
-    title, slug,
-    mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt }
+  productsTitle, productsSubtitle,
+  featuredProducts[]-> {
+    _id, title, slug, productCode, series, shortDescription,
+    brand->{ _id, name, slug },
+    category->{ _id, title, slug },
+    mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+  },
+  brandsTitle, brandsSubtitle,
+  featuredBrands[]-> {
+    _id, name, slug, description, website,
+    logo { asset->{ _id, url, metadata { lqip, dimensions } }, alt }
   },
   blogTitle, blogSubtitle,
   featuredPosts[]-> {
@@ -72,6 +79,13 @@ export const blogPageQuery = groq`*[_type == "blogPage"][0] {
   pageTitle, pageSubtitle, ctaLabel, ctaLink, seo
 }`;
 
+export const productsPageQuery = groq`*[_type == "productsPage"][0] {
+  heroTitle, heroSubtitle,
+  heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  pageTitle, pageSubtitle, searchPlaceholder, emptyStateMessage,
+  contactCtaTitle, contactCtaDescription, contactCtaButtonText, seo
+}`;
+
 export const servicesPageQuery = groq`*[_type == "servicesPage"][0] {
   heroTitle, heroSubtitle,
   heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
@@ -82,6 +96,50 @@ export const projectsPageQuery = groq`*[_type == "projectsPage"][0] {
   heroTitle, heroSubtitle,
   heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   pageTitle, pageSubtitle, ctaLabel, ctaLink, seo
+}`;
+
+// ─── Ürünler ───────────────────────────────────────────────────────────────────
+
+export const productListQuery = groq`*[_type == "product"] | order(order asc, _createdAt desc) {
+  _id, title, slug, productCode, series, shortDescription, featured,
+  brand->{ _id, name, slug, logo { asset->{ _id, url } } },
+  category->{ _id, title, slug, parent->{ _id, title, slug } },
+  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+}`;
+
+export const productFallbackQuery = groq`*[_type == "product"] | order(_createdAt desc)[0...6] {
+  _id, title, slug, productCode, series, shortDescription, featured,
+  brand->{ _id, name, slug },
+  category->{ _id, title, slug },
+  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+}`;
+
+export const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0] {
+  _id, title, slug, productCode, series, shortDescription, body,
+  specifications, documents,
+  brand->{ _id, name, slug, website, logo { asset->{ _id, url } } },
+  category->{ _id, title, slug, parent->{ _id, title, slug } },
+  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  gallery[] { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  seo
+}`;
+
+export const productCategoriesQuery = groq`*[_type == "productCategory" && isActive != false] | order(order asc, title asc) {
+  _id, title, slug, description,
+  parent->{ _id, title, slug },
+  image { asset->{ _id, url, metadata { lqip, dimensions } }, alt }
+}`;
+
+export const brandListQuery = groq`*[_type == "brand"] | order(order asc, name asc) {
+  _id, name, slug, description, website, featured,
+  logo { asset->{ _id, url, metadata { lqip, dimensions } }, alt }
+}`;
+
+export const productRelatedQuery = groq`*[_type == "product" && category._ref == $categoryId && _id != $currentProductId] | order(_createdAt desc)[0...4] {
+  _id, title, slug, productCode, series, shortDescription,
+  brand->{ _id, name, slug },
+  category->{ _id, title, slug },
+  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 
 // ─── Blog ──────────────────────────────────────────────────────────────────────
@@ -175,10 +233,12 @@ export const allSlugsForSitemapQuery = groq`{
     "about": *[_type == "aboutPage"][0] { _updatedAt, "noIndex": seo.noIndex },
     "contact": *[_type == "contactPage"][0] { _updatedAt, "noIndex": seo.noIndex },
     "blog": *[_type == "blogPage"][0] { _updatedAt, "noIndex": seo.noIndex },
+    "products": *[_type == "productsPage"][0] { _updatedAt, "noIndex": seo.noIndex },
     "services": *[_type == "servicesPage"][0] { _updatedAt, "noIndex": seo.noIndex },
     "projects": *[_type == "projectsPage"][0] { _updatedAt, "noIndex": seo.noIndex }
   },
   "blogPosts": *[_type == "blogPost" && defined(slug.current) && !(seo.noIndex == true)] { "slug": slug.current, _updatedAt },
+  "products": *[_type == "product" && defined(slug.current) && !(seo.noIndex == true)] { "slug": slug.current, _updatedAt },
   "services": *[_type == "service" && defined(slug.current) && !(seo.noIndex == true)] { "slug": slug.current, _updatedAt },
   "projects": *[_type == "project" && defined(slug.current) && !(seo.noIndex == true)] { "slug": slug.current, _updatedAt }
 }`;
@@ -196,6 +256,6 @@ export const defaultSeoQuery = groq`*[_type == "siteSettings"][0] {
 }`;
 
 export const blogSlugsQuery = groq`*[_type == "blogPost" && defined(slug.current)] { "slug": slug.current }`;
+export const productSlugsQuery = groq`*[_type == "product" && defined(slug.current)] { "slug": slug.current }`;
 export const projectSlugsQuery = groq`*[_type == "project" && defined(slug.current)] { "slug": slug.current }`;
 export const serviceSlugsQuery = groq`*[_type == "service" && defined(slug.current)] { "slug": slug.current }`;
-
