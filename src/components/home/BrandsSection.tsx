@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { Brand } from "@/types";
 import { urlForImage } from "@/sanity/lib/image";
@@ -14,9 +15,9 @@ export function BrandsSection({
   brands = [],
 }: BrandsSectionProps) {
   const defaultBrands = [
-    { name: "GPD", desc: "Armatür, Batarya ve Duş Sistemleri" },
-    { name: "E.C.A.", desc: "Kombi, Klima ve Isıtma-Soğutma Çözümleri" },
-    { name: "SEREL", desc: "Seramik, Vitrifiye ve Banyo Ekipmanları" },
+    { name: "GPD", slug: { current: "gpd" }, desc: "Armatür, Batarya ve Duş Sistemleri" },
+    { name: "E.C.A.", slug: { current: "eca" }, desc: "Kombi, Klima ve Isıtma-Soğutma Çözümleri" },
+    { name: "SEREL", slug: { current: "serel" }, desc: "Seramik, Vitrifiye ve Banyo Ekipmanları" },
   ];
 
   const brandItems = brands.length > 0 ? brands : defaultBrands;
@@ -41,11 +42,14 @@ export function BrandsSection({
             const logoUrl = logoImage?.asset?.url || (logoImage?.asset ? urlForImage(logoImage)?.url() : undefined);
             const brandName = (brand as Brand).name || (brand as { name?: string }).name || "";
             const brandDesc = (brand as Brand).description || (brand as { desc?: string }).desc || "";
+            const brandSlug = (brand as Brand).slug?.current || (brand as { slug?: { current?: string } }).slug?.current;
+            const brandHref = brandSlug ? `/urunler?marka=${brandSlug}` : "/urunler";
 
             return (
-              <div
+              <Link
                 key={(brand as Brand)._id || i}
-                className="p-8 md:p-10 rounded-2xl border bg-card text-center flex flex-col items-center justify-between min-h-[220px] shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
+                href={brandHref}
+                className="p-8 md:p-10 rounded-2xl border bg-card text-center flex flex-col items-center justify-between min-h-[220px] shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group block"
               >
                 {/* Logo */}
                 <div className="h-28 w-full flex items-center justify-center p-3 mb-4">
@@ -68,7 +72,7 @@ export function BrandsSection({
                     {brandDesc}
                   </p>
                 )}
-              </div>
+              </Link>
             );
           })}
         </div>

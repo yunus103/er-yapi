@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { cache } from "react";
+import { cache, Suspense } from "react";
 import { client, cachedFetch } from "@/sanity/lib/client";
 import {
   productsPageQuery,
@@ -55,12 +55,14 @@ export default async function ProductsCatalogPage() {
 
       <div className="container mx-auto px-4">
         {/* İstemci Tarafı Filtrelenebilir Ürün Kataloğu */}
-        <ProductCatalogGrid
-          products={products || []}
-          categories={categories || []}
-          brands={brands || []}
-          emptyStateMessage={pageData?.emptyStateMessage}
-        />
+        <Suspense fallback={<div className="py-20 text-center text-muted-foreground">Katalog Yükleniyor...</div>}>
+          <ProductCatalogGrid
+            products={products || []}
+            categories={categories || []}
+            brands={brands || []}
+            emptyStateMessage={pageData?.emptyStateMessage}
+          />
+        </Suspense>
 
         {/* CTA Section */}
         <FadeIn className="mt-16 md:mt-24 p-8 md:p-12 rounded-2xl bg-muted/40 border text-center max-w-4xl mx-auto shadow-sm">

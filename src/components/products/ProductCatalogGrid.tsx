@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { AnimateGroup } from "@/components/ui/AnimateGroup";
@@ -22,9 +23,46 @@ export function ProductCatalogGrid({
   brands = [],
   emptyStateMessage = "Ürünler Çok Yakında Eklenecek",
 }: ProductCatalogGridProps) {
+  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBrandSlug, setSelectedBrandSlug] = useState<string | null>(null);
   const [selectedCategorySlug, setSelectedCategorySlug] = useState<string | null>(null);
+
+  // URL'deki query parametrelerini (kategori & marka) oku ve filtre durumuna eşitle
+  useEffect(() => {
+    const kategoriParam = searchParams.get("kategori");
+    const markaParam = searchParams.get("marka");
+
+    if (kategoriParam) {
+      setSelectedCategorySlug(kategoriParam);
+    }
+    if (markaParam) {
+      setSelectedBrandSlug(markaParam);
+    }
+  }, [searchParams]);
+
+  // URL query parametresini güncelleyen yardımcı fonksiyon
+  const updateUrlParams = (key: "kategori" | "marka", value: string | null) => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+    const newUrl = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname;
+    window.history.replaceState(null, "", newUrl);
+  };
+
+  const handleSelectBrand = (slug: string | null) => {
+    setSelectedBrandSlug(slug);
+    updateUrlParams("marka", slug);
+  };
+
+  const handleSelectCategory = (slug: string | null) => {
+    setSelectedCategorySlug(slug);
+    updateUrlParams("kategori", slug);
+  };
 
   // Filtreleme mantığı
   const filteredProducts = useMemo(() => {
@@ -62,6 +100,9 @@ export function ProductCatalogGrid({
     setSearchQuery("");
     setSelectedBrandSlug(null);
     setSelectedCategorySlug(null);
+    if (typeof window !== "undefined") {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
   };
 
   return (
@@ -115,7 +156,7 @@ export function ProductCatalogGrid({
                 <RiFilter3Line className="size-4" /> Marka:
               </span>
               <button
-                onClick={() => setSelectedBrandSlug(null)}
+                onClick={() => handleSelectBrand(null)}
                 className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                   selectedBrandSlug === null
                     ? "bg-primary text-primary-foreground shadow-sm"
@@ -129,7 +170,7 @@ export function ProductCatalogGrid({
                 return (
                   <button
                     key={brand._id}
-                    onClick={() => setSelectedBrandSlug(isSelected ? null : (brand.slug?.current || null))}
+                    onClick={() => handleSelectBrand(isSelected ? null : (brand.slug?.current || null))}
                     className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                       isSelected
                         ? "bg-primary text-primary-foreground shadow-sm"
@@ -150,7 +191,7 @@ export function ProductCatalogGrid({
                 Kategori:
               </span>
               <button
-                onClick={() => setSelectedCategorySlug(null)}
+                onClick={() => handleSelectCategory(null)}
                 className={`px-3.5 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer ${
                   selectedCategorySlug === null
                     ? "bg-foreground text-background shadow-sm"
@@ -164,7 +205,7 @@ export function ProductCatalogGrid({
                 return (
                   <button
                     key={cat._id}
-                    onClick={() => setSelectedCategorySlug(isSelected ? null : (cat.slug?.current || null))}
+                    onClick={() => handleSelectCategory(isSelected ? null : (cat.slug?.current || null))}
                     className={`px-3.5 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer ${
                       isSelected
                         ? "bg-foreground text-background shadow-sm"
