@@ -67,10 +67,17 @@ export const aboutPageQuery = groq`*[_type == "aboutPage"][0] {
   seo
 }`;
 
-export const contactPageQuery = groq`*[_type == "contactPage"][0] {
-  heroTitle, heroSubtitle,
-  heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
-  pageTitle, pageSubtitle, formTitle, successMessage, seo
+export const contactPageQuery = groq`{
+  "page": *[_type == "contactPage"][0] {
+    heroTitle, heroSubtitle,
+    heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+    pageTitle, pageSubtitle, formTitle, successMessage, seo
+  },
+  "settings": *[_type == "siteSettings"][0] {
+    siteName, siteTagline,
+    contactInfo { phone, email, address, whatsappNumber, mapIframe },
+    socialLinks[] { platform, url }
+  }
 }`;
 
 export const blogPageQuery = groq`*[_type == "blogPage"][0] {

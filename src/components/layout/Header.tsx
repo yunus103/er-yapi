@@ -55,12 +55,12 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
     <>
       {/* 1. Üst Bilgi Barı (Sayfa aşağı kaydırılınca doğal olarak yukarı kayıp kaybolur) */}
       {(address || phone || whatsapp) && (
-        <div className="hidden lg:block bg-muted/60 border-b border-border/60 py-2 text-xs font-medium text-foreground/80">
+        <div className="hidden lg:block bg-muted/60 border-b border-border/60 py-2.5 text-sm font-semibold text-foreground/80">
           <div className="container mx-auto px-4 flex items-center justify-between">
             <div className="flex items-center gap-6">
               {address && (
-                <span className="inline-flex items-center gap-1.5">
-                  <RiMapPinLine className="text-primary size-3.5" />
+                <span className="inline-flex items-center gap-2">
+                  <RiMapPinLine className="text-primary size-4" />
                   <span>{address}</span>
                 </span>
               )}

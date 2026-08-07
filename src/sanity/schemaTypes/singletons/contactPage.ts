@@ -4,6 +4,14 @@ export const contactPageType = defineType({
   name: "contactPage",
   title: "İletişim Sayfası",
   type: "document",
+  initialValue: {
+    heroTitle: "İletişim",
+    heroSubtitle: "Ürünler, stok durumları ve özel fiyat teklifleri için mağazamızla iletişime geçin veya Malatya Tecde'deki showroomumuzu ziyaret edin.",
+    pageTitle: "Mağazamızla İletişime Geçin",
+    pageSubtitle: "Sorularınız, fiyat teklifleri ve ürün danışmanlığı için bize telefon, WhatsApp veya iletişim formu üzerinden ulaşabilirsiniz.",
+    formTitle: "Bize Mesaj Gönderin",
+    successMessage: "Mesajınız başarıyla alındı. En kısa sürede sizinle iletişime geçeceğiz.",
+  },
   groups: [
     { name: "hero", title: "Page Hero Bölümü" },
     { name: "content", title: "Sayfa İçeriği" },

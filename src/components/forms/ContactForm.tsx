@@ -89,105 +89,140 @@ export function ContactForm({
 
   if (status === "success") {
     return (
-      <div className="rounded-lg border bg-card p-8 text-center">
-        <div className="text-4xl mb-4">✅</div>
-        <p className="text-lg font-medium">{successMessage}</p>
+      <div className="rounded-2xl border bg-card p-8 text-center shadow-sm space-y-4">
+        <div className="size-16 rounded-full bg-emerald-50 text-emerald-600 font-bold text-3xl flex items-center justify-center mx-auto border border-emerald-200">
+          ✓
+        </div>
+        <h3 className="text-2xl font-bold font-heading text-foreground">Mesajınız Alındı</h3>
+        <p className="text-base text-muted-foreground max-w-md mx-auto leading-relaxed">{successMessage}</p>
+        <Button onClick={() => setStatus("idle")} variant="outline" className="mt-4">
+          Yeni Mesaj Gönder
+        </Button>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-      {formTitle && <h2 className="text-2xl font-bold">{formTitle}</h2>}
-
-      {/* Honeypot — spam botları için gizli alan */}
-      <div className="absolute opacity-0 pointer-events-none h-0 overflow-hidden" aria-hidden="true">
-        <input name="website" type="text" tabIndex={-1} autoComplete="off" />
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="name">Ad Soyad *</Label>
-          <Input
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Adınız Soyadınız"
-            aria-invalid={!!fieldErrors.name}
-          />
-          {fieldErrors.name && (
-            <p className="text-sm text-destructive">{fieldErrors.name[0]}</p>
-          )}
+    <div className="rounded-2xl border bg-card p-6 md:p-8 shadow-sm space-y-6">
+      {formTitle && (
+        <div>
+          <h2 className="text-2xl md:text-3xl font-bold font-heading text-foreground">{formTitle}</h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Aşağıdaki formu doldurarak bize doğrudan mesaj gönderebilirsiniz.
+          </p>
         </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="email">E-posta *</Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="ornek@mail.com"
-            aria-invalid={!!fieldErrors.email}
-          />
-          {fieldErrors.email && (
-            <p className="text-sm text-destructive">{fieldErrors.email[0]}</p>
-          )}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="phone">Telefon</Label>
-          <Input
-            id="phone"
-            name="phone"
-            type="tel"
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder="+90 555 000 00 00"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="subject">Konu</Label>
-          <Input
-            id="subject"
-            name="subject"
-            value={formData.subject}
-            onChange={handleChange}
-            placeholder="Mesajınızın konusu"
-          />
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="message">Mesaj *</Label>
-        <Textarea
-          id="message"
-          name="message"
-          value={formData.message}
-          onChange={handleChange}
-          placeholder="Mesajınızı buraya yazın..."
-          rows={6}
-          aria-invalid={!!fieldErrors.message}
-        />
-        {fieldErrors.message && (
-          <p className="text-sm text-destructive">{fieldErrors.message[0]}</p>
-        )}
-      </div>
-
-      {status === "error" && (
-        <p className="text-sm text-destructive">
-          Bir hata oluştu. Lütfen tekrar deneyin.
-        </p>
       )}
 
-      <Button type="submit" disabled={status === "loading"} className="w-full sm:w-auto">
-        {status === "loading" ? "Gönderiliyor..." : "Gönder"}
-      </Button>
-    </form>
+      <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+        {/* Honeypot — spam botları için gizli alan */}
+        <div className="absolute opacity-0 pointer-events-none h-0 overflow-hidden" aria-hidden="true">
+          <input name="website" type="text" tabIndex={-1} autoComplete="off" />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="name" className="text-sm font-semibold text-foreground">
+              Ad Soyad *
+            </Label>
+            <Input
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Adınız Soyadınız"
+              className="h-11 rounded-xl bg-background text-sm"
+              aria-invalid={!!fieldErrors.name}
+            />
+            {fieldErrors.name && (
+              <p className="text-sm font-medium text-destructive">{fieldErrors.name[0]}</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-sm font-semibold text-foreground">
+              E-posta *
+            </Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="ornek@mail.com"
+              className="h-11 rounded-xl bg-background text-sm"
+              aria-invalid={!!fieldErrors.email}
+            />
+            {fieldErrors.email && (
+              <p className="text-sm font-medium text-destructive">{fieldErrors.email[0]}</p>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="phone" className="text-sm font-semibold text-foreground">
+              Telefon
+            </Label>
+            <Input
+              id="phone"
+              name="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="+90 5XX XXX XX XX"
+              className="h-11 rounded-xl bg-background text-sm"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="subject" className="text-sm font-semibold text-foreground">
+              Konu
+            </Label>
+            <Input
+              id="subject"
+              name="subject"
+              value={formData.subject}
+              onChange={handleChange}
+              placeholder="Mesajınızın konusu"
+              className="h-11 rounded-xl bg-background text-sm"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="message" className="text-sm font-semibold text-foreground">
+            Mesajınız *
+          </Label>
+          <Textarea
+            id="message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            placeholder="Ürün talebi, stok sorgulama veya mesajınız..."
+            rows={5}
+            className="rounded-xl bg-background text-sm resize-none"
+            aria-invalid={!!fieldErrors.message}
+          />
+          {fieldErrors.message && (
+            <p className="text-sm font-medium text-destructive">{fieldErrors.message[0]}</p>
+          )}
+        </div>
+
+        {status === "error" && (
+          <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-sm font-medium text-destructive">
+            Mesajınız gönderilemedi. Lütfen alanları kontrol edip tekrar deneyin.
+          </div>
+        )}
+
+        <Button
+          type="submit"
+          disabled={status === "loading"}
+          size="lg"
+          className="w-full sm:w-auto h-12 px-8 text-base font-semibold cursor-pointer"
+        >
+          {status === "loading" ? "Gönderiliyor..." : "Mesajı Gönder"}
+        </Button>
+      </form>
+    </div>
   );
 }

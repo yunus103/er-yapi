@@ -90,7 +90,7 @@ export function Footer({ settings, navigation }: { settings: SiteSettings; navig
                 <span>Çalışma Saatlerimiz</span>
               </p>
               <p className="text-xs md:text-sm text-muted-foreground pl-6">
-                Hafta İçi & Cumartesi: 08:00 - 19:00 | Pazar: Kapalı
+                Hafta İçi & Cumartesi: 08:00 - 18:00 | Pazar: Kapalı
               </p>
             </div>
           </div>
