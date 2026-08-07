@@ -5,10 +5,19 @@ import { usePathname } from "next/navigation";
 import { RiArrowRightSLine, RiHome4Line } from "react-icons/ri";
 import { JsonLd, breadcrumbListJsonLd } from "@/components/seo/JsonLd";
 
-type BreadcrumbItem = {
+export type BreadcrumbItem = {
   label: string;
   href: string;
   active?: boolean;
+};
+
+const ROUTE_LABELS: Record<string, string> = {
+  urunler: "Ürünler",
+  hakkimizda: "Hakkımızda",
+  iletisim: "İletişim",
+  blog: "Blog",
+  hizmetler: "Hizmetler",
+  projeler: "Projeler",
 };
 
 export function Breadcrumbs({ items, className = "" }: { items?: BreadcrumbItem[], className?: string }) {
@@ -17,12 +26,16 @@ export function Breadcrumbs({ items, className = "" }: { items?: BreadcrumbItem[
   // Eğer dışarıdan liste gelmezse current path'ten üret
   const generateBreadcrumbs = () => {
     const paths = pathname.split("/").filter((path) => path !== "");
-    const breadcrumbs: BreadcrumbItem[] = paths.map((path, index) => {
+    const breadcrumbs: BreadcrumbItem[] = paths.map((rawPath, index) => {
       const href = `/${paths.slice(0, index + 1).join("/")}`;
-      // Slug temizliği (tireleri boşluk yap, baş harfleri büyüt)
-      const label = path
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, (l) => l.toUpperCase());
+      const decodedPath = decodeURIComponent(rawPath).toLowerCase();
+      
+      let label = ROUTE_LABELS[decodedPath];
+      if (!label) {
+        label = decodedPath
+          .replace(/-/g, " ")
+          .replace(/\b\w/g, (l) => l.toUpperCase());
+      }
         
       return { label, href, active: index === paths.length - 1 };
     });

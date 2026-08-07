@@ -24,6 +24,7 @@ Bu kural dosyası, bu boilerplate üzerinde geliştirme yapacak tüm yapay zeka 
 3. **FAQ İçeriklerini DOM'dan Kaldırma:** Sıkça Sorulan Sorular bileşenlerinde `{isOpen && <div>...</div>}` gibi conditional rendering **yapılamaz**. Cevaplar her zaman DOM'da kalmalı, görünürlük CSS/Framer Motion `height` animasyonu ile yönetilmelidir (SEO İndekslenebilirlik Kuralı).
 4. **Hazır Bileşenleri Yeniden Yazma:** `src/components/ui/` altındaki mevcut atomik bileşenlerin (Accordion, Button, Dialog vb.) işlevlerini gören yeni özel bileşenler yazma. Önce orayı kontrol et.
 5. **Hardcoded Metin/Ayar Kullanma:** Menü bağlantıları, sosyal medya linkleri, logo yolları veya başlıklar gibi içerikleri kod içerisine hardcoded olarak gömme. Bunları her zaman Sanity (`siteSettings`, `navigation`) üzerinden çek, gerektiginde fallback olabilir.
+6. **Aşırı Küçük Font Size (`text-xs`, `text-[10px]`, `text-[11px]`, `text-[12px]`) Kullanma:** Projede rozetler, etiketler, ürün kodları, ikincil açıklamalar veya butonlar dahil hiçbir yerde `text-xs` (12px) veya daha küçük font boyutları **kullanılamaz**. Tüm etiketler, rozetler ve okunabilir metinler en az `text-sm` (14px) veya `text-base` (16px) font boyutunda olmalıdır.
 
 ### 🟢 HER ZAMAN Yap (Always Do):
 

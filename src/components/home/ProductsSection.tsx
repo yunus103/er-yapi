@@ -64,7 +64,7 @@ export function ProductsSection({
 
                   {/* Marka Rozeti */}
                   {product.brand?.name && (
-                    <div className="absolute top-4 left-4 bg-background/95 backdrop-blur text-foreground text-xs md:text-sm font-bold px-3 py-1 rounded-md border border-border shadow-xs">
+                    <div className="absolute top-4 left-4 bg-background/95 backdrop-blur text-foreground text-sm font-bold px-3 py-1.5 rounded-lg border border-border shadow-xs">
                       {product.brand.name}
                     </div>
                   )}
@@ -74,7 +74,7 @@ export function ProductsSection({
                 <div className="p-6 md:p-8 flex-grow flex flex-col justify-between space-y-4">
                   <div>
                     {product.category?.title && (
-                      <p className="text-xs md:text-sm font-bold text-primary uppercase tracking-wider mb-2">
+                      <p className="text-sm font-bold text-primary uppercase tracking-wider mb-2">
                         {product.category.title}
                       </p>
                     )}

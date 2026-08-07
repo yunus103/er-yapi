@@ -29,7 +29,6 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
     { label: "Ana Sayfa", href: "/" },
     { label: "Ürünler", href: "/urunler" },
     { label: "Hakkımızda", href: "/hakkimizda" },
-    { label: "İletişim", href: "/iletisim" },
   ];
   const links: NavItem[] = (navigation?.headerLinks && navigation.headerLinks.length > 0)
     ? navigation.headerLinks
@@ -53,15 +52,15 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
   const address = contact?.address;
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-xs">
-      {/* 1. Üst Bilgi Barı (Sanity siteSettings'den gelen veriler) */}
+    <>
+      {/* 1. Üst Bilgi Barı (Sayfa aşağı kaydırılınca doğal olarak yukarı kayıp kaybolur) */}
       {(address || phone || whatsapp) && (
-        <div className="hidden lg:block bg-muted/60 border-b border-border/60 py-2.5 text-sm font-medium text-foreground/80">
+        <div className="hidden lg:block bg-muted/60 border-b border-border/60 py-2 text-xs font-medium text-foreground/80">
           <div className="container mx-auto px-4 flex items-center justify-between">
             <div className="flex items-center gap-6">
               {address && (
                 <span className="inline-flex items-center gap-1.5">
-                  <RiMapPinLine className="text-primary size-4" />
+                  <RiMapPinLine className="text-primary size-3.5" />
                   <span>{address}</span>
                 </span>
               )}
@@ -73,7 +72,7 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
                   href={`tel:${phone}`}
                   className="inline-flex items-center gap-1.5 hover:text-primary transition-colors"
                 >
-                  <RiPhoneLine className="text-primary size-4" />
+                  <RiPhoneLine className="text-primary size-3.5" />
                   <span>{phone}</span>
                 </a>
               )}
@@ -84,7 +83,7 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-emerald-600 hover:text-emerald-700 font-semibold transition-colors"
                 >
-                  <RiWhatsappLine className="size-4" />
+                  <RiWhatsappLine className="size-3.5" />
                   <span>WhatsApp</span>
                 </a>
               )}
@@ -93,95 +92,97 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
         </div>
       )}
 
-      {/* 2. Ana Header */}
-      <div className="container mx-auto flex h-20 md:h-22 items-center justify-between px-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center group h-full">
-          <div className="relative flex items-center justify-start transition-all duration-200 group-hover:scale-[1.01] active:scale-95 h-full py-3 max-w-[240px] sm:max-w-[320px] md:max-w-[420px]">
-            {settings?.logo ? (
-              <SanityImage
-                image={settings.logo}
-                width={600}
-                height={160}
-                fit="max"
-                className="h-full w-auto object-contain object-left"
-                priority
-              />
-            ) : (
-              <span className="font-bold text-2xl tracking-tight leading-none text-foreground uppercase">
-                {settings?.siteName || "ER YAPI"}
-              </span>
-            )}
+      {/* 2. Ana Sticky Header (Yalnızca bu kısım sabit kalır) */}
+      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-xs">
+        <div className="container mx-auto flex h-20 items-center justify-between px-4">
+          {/* Logo */}
+          <Link href="/" className="flex items-center group h-full">
+            <div className="relative flex items-center justify-start transition-all duration-200 group-hover:scale-[1.01] active:scale-95 h-full py-3 max-w-[240px] sm:max-w-[320px] md:max-w-[420px]">
+              {settings?.logo ? (
+                <SanityImage
+                  image={settings.logo}
+                  width={600}
+                  height={160}
+                  fit="max"
+                  className="h-full w-auto object-contain object-left"
+                  priority
+                />
+              ) : (
+                <span className="font-bold text-2xl tracking-tight leading-none text-foreground uppercase">
+                  {settings?.siteName || "ER YAPI"}
+                </span>
+              )}
+            </div>
+          </Link>
+
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-8">
+            {links.map((item, i) => (
+              <DesktopNavItem key={i} item={item} active={isActive(item)} />
+            ))}
+          </nav>
+
+          {/* Desktop Action */}
+          <div className="hidden md:flex items-center gap-3">
+            <Button size="lg" render={<Link href="/iletisim" />} className="h-11 px-6 text-base font-semibold">
+              İletişim
+            </Button>
           </div>
-        </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
-          {links.map((item, i) => (
-            <DesktopNavItem key={i} item={item} active={isActive(item)} />
-          ))}
-        </nav>
-
-        {/* Desktop Action */}
-        <div className="hidden md:flex items-center gap-3">
-          <Button size="lg" render={<Link href="/iletisim" />} className="h-11 px-6 text-base font-semibold">
-            İletişim
-          </Button>
+          {/* Mobile Controls */}
+          <div className="flex items-center gap-2 md:hidden">
+            <Button variant="ghost" size="icon" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menüyü aç/kapat">
+              {menuOpen ? <RiCloseLine size={26} /> : <RiMenu3Line size={26} />}
+            </Button>
+          </div>
         </div>
 
-        {/* Mobile Controls */}
-        <div className="flex items-center gap-2 md:hidden">
-          <Button variant="ghost" size="icon" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menüyü aç/kapat">
-            {menuOpen ? <RiCloseLine size={26} /> : <RiMenu3Line size={26} />}
-          </Button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="border-t md:hidden overflow-hidden bg-background"
-          >
-            <nav className="container mx-auto flex flex-col gap-3 px-4 py-6">
-              {links.map((item, i) => (
-                <div key={i} className="flex flex-col gap-1">
-                  <div className="flex items-center justify-between">
-                    <Link
-                      href={resolveHref(item)}
-                      className={cn(
-                        "text-lg font-semibold py-2 transition-colors hover:text-primary uppercase tracking-wide",
-                        isActive(item) ? "text-primary font-bold" : "text-foreground"
-                      )}
-                    >
-                      {item.label}
-                    </Link>
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="border-t md:hidden overflow-hidden bg-background"
+            >
+              <nav className="container mx-auto flex flex-col gap-3 px-4 py-6">
+                {links.map((item, i) => (
+                  <div key={i} className="flex flex-col gap-1">
+                    <div className="flex items-center justify-between">
+                      <Link
+                        href={resolveHref(item)}
+                        className={cn(
+                          "text-lg font-semibold py-2 transition-colors hover:text-primary uppercase tracking-wide",
+                          isActive(item) ? "text-primary font-bold" : "text-foreground"
+                        )}
+                      >
+                        {item.label}
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
 
-              <div className="pt-4 mt-2 border-t flex flex-col gap-3">
-                <Button size="lg" render={<Link href="/iletisim" />} className="w-full h-12 text-base font-semibold">
-                  İletişime Geçin
-                </Button>
-                {phone && (
-                  <a
-                    href={`tel:${phone}`}
-                    className="flex items-center justify-center gap-2 text-base font-medium text-foreground py-2.5 border rounded-lg"
-                  >
-                    <RiPhoneLine className="text-primary size-5" />
-                    <span>{phone}</span>
-                  </a>
-                )}
-              </div>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+                <div className="pt-4 mt-2 border-t flex flex-col gap-3">
+                  <Button size="lg" render={<Link href="/iletisim" />} className="w-full h-12 text-base font-semibold">
+                    İletişime Geçin
+                  </Button>
+                  {phone && (
+                    <a
+                      href={`tel:${phone}`}
+                      className="flex items-center justify-center gap-2 text-base font-medium text-foreground py-2.5 border rounded-lg"
+                    >
+                      <RiPhoneLine className="text-primary size-5" />
+                      <span>{phone}</span>
+                    </a>
+                  )}
+                </div>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
+    </>
   );
 }
 
