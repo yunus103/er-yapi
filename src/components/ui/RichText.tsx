@@ -82,6 +82,46 @@ const components: PortableTextComponents = {
       );
     },
   },
+  list: {
+    bullet: ({ children }) => {
+      const itemCount = Array.isArray(children) ? children.length : 0;
+      const isMultiColumn = itemCount > 6;
+      return (
+        <ul
+          className={`space-y-1.5 my-4 list-disc pl-5 text-muted-foreground ${
+            isMultiColumn ? "columns-1 md:columns-2 gap-8" : ""
+          }`}
+        >
+          {children}
+        </ul>
+      );
+    },
+    number: ({ children }) => {
+      const itemCount = Array.isArray(children) ? children.length : 0;
+      const isMultiColumn = itemCount > 6;
+      return (
+        <ol
+          className={`space-y-1.5 my-4 list-decimal pl-5 text-muted-foreground ${
+            isMultiColumn ? "columns-1 md:columns-2 gap-8" : ""
+          }`}
+        >
+          {children}
+        </ol>
+      );
+    },
+  },
+  listItem: {
+    bullet: ({ children }) => (
+      <li className="break-inside-avoid mb-2 pl-1 leading-snug text-base text-foreground/90">
+        {children}
+      </li>
+    ),
+    number: ({ children }) => (
+      <li className="break-inside-avoid mb-2 pl-1 leading-snug text-base text-foreground/90">
+        {children}
+      </li>
+    ),
+  },
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

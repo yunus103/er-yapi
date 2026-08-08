@@ -17,6 +17,15 @@ export function CategoriesSection({
 }: CategoriesSectionProps) {
   if (!categories || categories.length === 0) return null;
 
+  const gridColsClass =
+    categories.length === 1
+      ? "grid-cols-1 max-w-md mx-auto"
+      : categories.length === 2
+      ? "grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto"
+      : categories.length === 3
+      ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto"
+      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
+
   return (
     <section className="py-16 md:py-24 bg-muted/30 border-y border-border/50">
       <div className="container mx-auto px-4">
@@ -25,12 +34,12 @@ export function CategoriesSection({
           {subtitle && <p className="text-muted-foreground text-base md:text-lg">{subtitle}</p>}
         </FadeIn>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+        <div className={`grid ${gridColsClass} gap-6 md:gap-8`}>
           {categories.map((category) => (
             <Link key={category._id || category.slug?.current} href={`/urunler?kategori=${category.slug?.current}`} className="group block">
               <div className="border rounded-2xl p-6 bg-card hover:shadow-xl hover:border-primary/30 transition-all duration-300 h-full flex flex-col justify-between hover:-translate-y-1">
                 {category.image && (
-                  /* Dikey ürün fotoğraflarının (kombi, batarya, duş seti, gömme rezervuar vb.) kesilmemesi için 1:1 kare oran ve contain kullanımı */
+                  /* Dikey ürün fotoğraflarının kesilmemesi için 1:1 kare oran ve contain kullanımı */
                   <div className="relative aspect-square rounded-xl overflow-hidden mb-6 bg-muted/20 border flex items-center justify-center p-3">
                     <SanityImage
                       image={category.image}

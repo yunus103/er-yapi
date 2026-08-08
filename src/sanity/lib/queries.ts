@@ -40,8 +40,8 @@ export const homePageQuery = groq`*[_type == "homePage"][0] {
   },
   productsTitle, productsSubtitle,
   featuredProducts[]-> {
-    _id, title, slug, productCode, series, shortDescription,
-    brand->{ _id, name, slug },
+    _id, title, slug, productCode, series, shortDescription, featured,
+    brand->{ _id, name, slug, logo { asset->{ _id, url, metadata { lqip, dimensions } } } },
     category->{ _id, title, slug },
     mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
   },
@@ -109,14 +109,14 @@ export const projectsPageQuery = groq`*[_type == "projectsPage"][0] {
 
 export const productListQuery = groq`*[_type == "product"] | order(order asc, _createdAt desc) {
   _id, title, slug, productCode, series, shortDescription, featured,
-  brand->{ _id, name, slug, logo { asset->{ _id, url } } },
+  brand->{ _id, name, slug, logo { asset->{ _id, url, metadata { lqip, dimensions } } } },
   category->{ _id, title, slug, parent->{ _id, title, slug } },
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 
-export const productFallbackQuery = groq`*[_type == "product"] | order(_createdAt desc)[0...6] {
+export const productFallbackQuery = groq`*[_type == "product"] | order(featured desc, order asc, _createdAt desc)[0...6] {
   _id, title, slug, productCode, series, shortDescription, featured,
-  brand->{ _id, name, slug },
+  brand->{ _id, name, slug, logo { asset->{ _id, url, metadata { lqip, dimensions } } } },
   category->{ _id, title, slug },
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
@@ -124,7 +124,7 @@ export const productFallbackQuery = groq`*[_type == "product"] | order(_createdA
 export const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0] {
   _id, title, slug, productCode, series, shortDescription, body,
   specifications, documents,
-  brand->{ _id, name, slug, website, logo { asset->{ _id, url } } },
+  brand->{ _id, name, slug, website, logo { asset->{ _id, url, metadata { lqip, dimensions } } } },
   category->{ _id, title, slug, parent->{ _id, title, slug } },
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   gallery[] { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
@@ -144,7 +144,7 @@ export const brandListQuery = groq`*[_type == "brand"] | order(order asc, name a
 
 export const productRelatedQuery = groq`*[_type == "product" && category._ref == $categoryId && _id != $currentProductId] | order(_createdAt desc)[0...4] {
   _id, title, slug, productCode, series, shortDescription,
-  brand->{ _id, name, slug },
+  brand->{ _id, name, slug, logo { asset->{ _id, url, metadata { lqip, dimensions } } } },
   category->{ _id, title, slug },
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;

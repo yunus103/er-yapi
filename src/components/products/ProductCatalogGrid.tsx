@@ -246,10 +246,21 @@ export function ProductCatalogGrid({
                     </div>
                   )}
 
-                  {/* Marka Badge */}
+                  {/* Marka Badge: Logo varsa görsel logo, yoksa metin */}
                   {product.brand?.name && (
-                    <div className="absolute top-3 left-3 bg-background/95 backdrop-blur text-foreground text-sm font-bold px-3 py-1.5 rounded-lg border shadow-sm tracking-wide">
-                      {product.brand.name}
+                    <div className="absolute top-3 left-3 bg-background/95 backdrop-blur text-foreground text-sm font-bold px-3 py-1.5 rounded-lg border shadow-sm tracking-wide flex items-center justify-center">
+                      {product.brand.logo?.asset ? (
+                        <div className="relative h-5 w-16 flex items-center justify-center">
+                          <SanityImage
+                            image={product.brand.logo}
+                            fill
+                            sizes="80px"
+                            className="object-contain"
+                          />
+                        </div>
+                      ) : (
+                        <span>{product.brand.name}</span>
+                      )}
                     </div>
                   )}
                 </div>

@@ -18,6 +18,9 @@ export function ProductsSection({
 }: ProductsSectionProps) {
   if (!products || products.length === 0) return null;
 
+  // Sanity'de "Öne Çıkan Ürün" (featured: true) olarak işaretlenmiş ürünleri en ön sırada göster
+  const sortedProducts = [...products].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+
   return (
     <section className="py-20 md:py-28 bg-background border-t border-border">
       <div className="container mx-auto px-4">
@@ -44,7 +47,7 @@ export function ProductsSection({
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => (
+          {sortedProducts.map((product) => (
             <Link key={product._id || product.slug?.current} href={`/urunler/${product.slug?.current}`} className="group block">
               <article className="border rounded-2xl overflow-hidden bg-card hover:shadow-xl transition-all duration-300 h-full flex flex-col hover:-translate-y-1">
                 {/* Görsel Kutusu */}
@@ -62,10 +65,28 @@ export function ProductsSection({
                     </div>
                   )}
 
-                  {/* Marka Rozeti */}
+                  {/* Marka Rozeti: Logo varsa görsel logo, yoksa metin */}
                   {product.brand?.name && (
-                    <div className="absolute top-4 left-4 bg-background/95 backdrop-blur text-foreground text-sm font-bold px-3 py-1.5 rounded-lg border border-border shadow-xs">
-                      {product.brand.name}
+                    <div className="absolute top-4 left-4 bg-background/95 backdrop-blur text-foreground text-sm font-bold px-3 py-1.5 rounded-lg border border-border shadow-xs flex items-center justify-center">
+                      {product.brand.logo?.asset ? (
+                        <div className="relative h-5 w-16 flex items-center justify-center">
+                          <SanityImage
+                            image={product.brand.logo}
+                            fill
+                            sizes="80px"
+                            className="object-contain"
+                          />
+                        </div>
+                      ) : (
+                        <span>{product.brand.name}</span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Öne Çıkan Ürün Rozeti */}
+                  {product.featured && (
+                    <div className="absolute top-4 right-4 bg-primary text-primary-foreground text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">
+                      Öne Çıkan
                     </div>
                   )}
                 </div>
