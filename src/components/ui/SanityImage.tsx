@@ -91,7 +91,7 @@ export function SanityImage({
     ? `${image.hotspot.x * 100}% ${image.hotspot.y * 100}%`
     : "center";
 
-  const resolvedObjectFit = objectFit ?? (fill ? "cover" : undefined);
+  const resolvedObjectFit = objectFit;
 
   return (
     <Image
@@ -105,8 +105,8 @@ export function SanityImage({
       className={className}
       priority={priority}
       style={{
-        objectFit: resolvedObjectFit,
-        objectPosition,
+        ...(resolvedObjectFit ? { objectFit: resolvedObjectFit } : {}),
+        ...(image.hotspot ? { objectPosition } : {}),
       }}
       placeholder={blurDataURL ? "blur" : "empty"}
       blurDataURL={blurDataURL}
